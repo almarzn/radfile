@@ -24,7 +24,7 @@ const options: UploadOptions<{}> = {
   onSuccess: () => {},
   restrictions: {
     allowMultiple: true,
-    accept: [
+    allowedFileTypes: [
       {
         description: "Images",
         accept: {
@@ -43,24 +43,30 @@ const options: UploadOptions<{}> = {
 </script>
 
 <template>
-  <UploadRoot :options="options">
-    <UploadDropZone class="dropzone">
-      <UploadEmptyState class="dropzone__empty-state">
+  <UploadRoot :options="options" data-testid="upload-root">
+    <UploadDropZone class="dropzone" data-testid="upload-dropzone">
+      <UploadEmptyState class="dropzone__empty-state" data-testid="upload-empty-state">
         Drop a file or click here to select a file
       </UploadEmptyState>
-      <UploadFileButton class="dropzone__button" />
-      <UploadFiles v-slot="{ files }" class="dropzone__files">
-        <UploadItem v-for="file in files" :key="file.id" :item="file" class="files__item">
-          <UploadItemPreview class="item__preview"/>
+      <UploadFileButton class="dropzone__button" data-testid="upload-file-button" />
+      <UploadFiles v-slot="{ files }" class="dropzone__files" data-testid="upload-files">
+        <UploadItem 
+          v-for="file in files" 
+          :key="file.id" 
+          :item="file" 
+          class="files__item"
+          :data-testid="`upload-item-id-${file.id}`"
+        >
+          <UploadItemPreview class="item__preview" data-testid="upload-item-preview"/>
           <div class="item__footer">
             <div class="footer__details">
-              <UploadItemName class="item__name"/>
-              <UploadItemProgress class="item__progress"/>
-              <UploadItemErrorMessage class="item__error"/>
-              <UploadItemSize class="item__size"/>
+              <UploadItemName class="item__name" data-testid="upload-item-name"/>
+              <UploadItemProgress class="item__progress" data-testid="upload-item-progress"/>
+              <UploadItemErrorMessage class="item__error" data-testid="upload-item-error"/>
+              <UploadItemSize class="item__size" data-testid="upload-item-size"/>
             </div>
             
-            <UploadItemRemove class="item__remove">
+            <UploadItemRemove class="item__remove" data-testid="upload-item-remove">
               &times;
             </UploadItemRemove>
           </div>

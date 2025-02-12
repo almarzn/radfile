@@ -1,3 +1,5 @@
+import type { CreateUploadHandler } from "./UploadHandler";
+
 export type UploadMetadata = {
 }
 
@@ -7,6 +9,7 @@ export type FileType = {
 };
 
 export interface UploadOptions<MetadataT extends UploadMetadata> {
+  readonly createUploadHandler: CreateUploadHandler;
   readonly getMetadata: () => MetadataT;
   readonly onPickError?: (err: unknown) => void;
   readonly onUploadError?: (err: unknown) => void;

@@ -26,7 +26,7 @@ const progress = computed(() => {
 <template>
   <Primitive v-if="progress !== null" v-bind="props">
     <slot :progress="progress">
-      {{ progress.toLocaleString(undefined, { style: "percent" }) }}%
+      {{ progress.toLocaleString(undefined, { style: "percent" }) }}
     </slot>
   </Primitive>
 </template>

@@ -1,4 +1,4 @@
-import type { InjectionKey } from "vue";
+import type { InjectionKey, Ref } from "vue";
 import { inject } from "vue";
 import type { UploadMetadata, UploadOptions } from "../UploadOptions.ts";
 
@@ -29,8 +29,12 @@ export type UploadFile<TStatus extends UploadFileStatus = UploadFileStatus> =  {
 export type UploadState = {
   files: ReadonlyArray<UploadFile>;
 
+  isUploading: Readonly<Ref<boolean>>;
+  hasIdle: Readonly<Ref<boolean>>;
+
   addFile: (file: File | File[]) => void;
   removeFile: (file: UploadFile) => void;
+  upload: () => void;
 };
 
 export const uploadStateKey = Symbol() as InjectionKey<UploadState>;

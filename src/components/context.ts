@@ -31,6 +31,7 @@ export type UploadState = {
 
   isUploading: Readonly<Ref<boolean>>;
   hasIdle: Readonly<Ref<boolean>>;
+  hasFiles: Readonly<Ref<boolean>>;
 
   addFile: (file: File | File[]) => void;
   removeFile: (file: UploadFile) => void;

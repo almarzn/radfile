@@ -6,6 +6,7 @@ export class UploadPage {
   readonly emptyState: Locator;
   readonly fileButton: Locator;
   readonly filesContainer: Locator;
+  readonly startUploadButton: Locator;
 
   constructor(private component: Locator) {
     this.root = component;
@@ -13,6 +14,9 @@ export class UploadPage {
     this.emptyState = component.getByTestId("upload-empty-state");
     this.fileButton = component.getByTestId("upload-file-button");
     this.filesContainer = component.getByTestId("upload-files");
+    this.startUploadButton = component.getByTestId(
+      "upload-start-upload-button"
+    );
   }
 
   // File item getters
@@ -125,5 +129,19 @@ export class UploadPage {
   async isDroppingState(): Promise<boolean> {
     const hasAttribute = await this.dropZone.getAttribute("data-dropping");
     return hasAttribute !== null;
+  }
+
+  async notifyProgress(progress: number) {
+    await this.component.page().evaluate((progress) => {
+      window.dispatchEvent(
+        new CustomEvent("story:setProgress", { detail: { progress } })
+      );
+    }, [progress]);
+  }
+
+  async notifyDone() {
+    await this.component.page().evaluate(() => {
+      window.dispatchEvent(new CustomEvent("story:onDone"));
+    });
   }
 }

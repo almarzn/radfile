@@ -1,11 +1,11 @@
-import { test, expect } from "@playwright/experimental-ct-vue";
+import { expect, test, type MountResult } from "@playwright/experimental-ct-vue";
+import path from "node:path";
 import UploadStory from "../UploadStory.vue";
 import { UploadPage } from "./UploadPage";
-import path from "node:path";
 
 test.describe("Upload Component", () => {
   let model: UploadPage;
-  let component: any;
+  let component: MountResult<typeof UploadStory>;
 
   test.beforeEach(async ({ mount, page }) => {
     component = await mount(UploadStory);
@@ -82,7 +82,7 @@ test.describe("Upload Component", () => {
 
         return fileIds;
       });
-      
+
       await test.step("Verify file preview and details are shown", async () => {
         const fileId = fileIds[0];
         await expect(model.getFilePreview(fileId)).toBeVisible();
@@ -91,7 +91,7 @@ test.describe("Upload Component", () => {
     });
   });
 
-  test("displays upload progress and handles errors", async () => {
+  test("displays upload progress", async () => {
     // Upload a test file
     const testFile = path.join(
       import.meta.dirname,
@@ -103,15 +103,21 @@ test.describe("Upload Component", () => {
     const fileIds = await model.getUploadedFileIds();
     const fileId = fileIds[0];
 
-    // Verify progress is shown
-    const progress = await model.getFileUploadProgress(fileId);
-    expect(progress).toBeTruthy();
+    await model.startUploadButton.click();
 
-    // Verify error handling (if applicable)
-    const errorMessage = await model.getFileErrorMessage(fileId);
-    if (errorMessage) {
-      expect(errorMessage).toContain("Error");
-    }
+    const progress = await model.getFileUploadProgress(fileId);
+    await expect(progress).toBe("0%");
+
+    await model.notifyProgress(25_000);
+
+    const updatedProgress = await model.getFileUploadProgress(fileId);
+    await expect(updatedProgress).toBe("52%");
+
+    await model.notifyDone();
+
+    const progressDone = await model.getFileProgress(fileId);
+
+    await expect(progressDone).not.toBeVisible();
   });
 
   test("handles file removal", async () => {

@@ -70,12 +70,14 @@ const addFile = (append: File | File[]) => {
 };
 
 const hasIdle = computed(() => files.some(file => file.status.status === "idle"));
+const hasFiles = computed(() => files.length > 0);
 const isUploading = computed(() => files.some(file => file.status.status === "pending"));
 
 provide(uploadStateKey, {
   files: readonly(files),
   addFile,
   hasIdle,
+  hasFiles,
   isUploading,
   removeFile(file) {
     files.splice(files.indexOf(file), 1);
@@ -92,6 +94,6 @@ provide(uploadStateKey, {
 
 <template>
   <Primitive v-bind="bindProps">
-    <slot />
+    <slot :has-idle="hasIdle" :has-files="hasFiles" :is-uploading="isUploading" />
   </Primitive>
 </template>

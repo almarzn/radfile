@@ -53,6 +53,7 @@ export class UploadPage {
     const fileChooserPromise = this.component
       .page()
       .waitForEvent("filechooser");
+      
     await this.fileButton.click();
     const fileChooser = await fileChooserPromise;
     await fileChooser.setFiles(files);

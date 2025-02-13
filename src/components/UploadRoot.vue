@@ -59,19 +59,38 @@ const addFile = (append: File | File[]) => {
     return addFile([append]);
   }
 
-  return files.push(
-    ...append.map((file) => ({
-      file,
-      id: Math.random().toString(36).slice(2),
-      metadata: props.options.getMetadata(),
-      status: { status: "idle" as const },
-    }))
-  );
+  if (append.length === 0) return;
+
+  if (props.options.restrictions.allowMultiple) {
+    return files.push(
+      ...append.map((file) => ({
+        file,
+        id: Math.random().toString(36).slice(2),
+        metadata: props.options.getMetadata(),
+        status: { status: "idle" as const },
+      }))
+    );
+  }
+
+  if (files.length > 1) {
+    throw new Error("Maximum number of files exceeded");
+  }
+
+  return files.splice(0, 1, {
+    file: append[0],
+    id: Math.random().toString(36).slice(2),
+    metadata: props.options.getMetadata(),
+    status: { status: "idle" as const },
+  })
 };
 
-const hasIdle = computed(() => files.some(file => file.status.status === "idle"));
+const hasIdle = computed(() =>
+  files.some((file) => file.status.status === "idle")
+);
 const hasFiles = computed(() => files.length > 0);
-const isUploading = computed(() => files.some(file => file.status.status === "pending"));
+const isUploading = computed(() =>
+  files.some((file) => file.status.status === "pending")
+);
 
 provide(uploadStateKey, {
   files: readonly(files),
@@ -83,10 +102,12 @@ provide(uploadStateKey, {
     files.splice(files.indexOf(file), 1);
   },
   upload: () => {
-    const idleFiles = files.filter(file => file.status.status === "idle");
-    idleFiles.forEach(file => {
-      file.status = { status: "pending", uploaded: 0 }
-    })
+    const idleFiles = files.filter((file) => file.status.status === "idle");
+
+    idleFiles.forEach((file) => {
+      file.status = { status: "pending", uploaded: 0 };
+    });
+    
     handler.onUpload(idleFiles.map((f) => f.file));
   },
 });
@@ -94,6 +115,10 @@ provide(uploadStateKey, {
 
 <template>
   <Primitive v-bind="bindProps">
-    <slot :has-idle="hasIdle" :has-files="hasFiles" :is-uploading="isUploading" />
+    <slot
+      :has-idle="hasIdle"
+      :has-files="hasFiles"
+      :is-uploading="isUploading"
+    />
   </Primitive>
 </template>

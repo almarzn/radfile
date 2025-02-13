@@ -1,20 +1,24 @@
 <script setup lang="ts">
 import {
-  UploadFiles,
-  UploadRoot,
-  UploadFileButton,
   UploadDropZone,
+  UploadEmptyState,
+  UploadFileButton,
+  UploadFiles,
   UploadItem,
   UploadItemErrorMessage,
+  UploadItemName,
   UploadItemPreview,
   UploadItemProgress,
   UploadItemRemove,
-  UploadItemName,
   UploadItemSize,
-  UploadEmptyState,
+  UploadRoot,
   UploadStartUploadButton,
 } from "./components";
 import type { UploadOptions } from "./UploadOptions";
+
+const props = defineProps<{
+  allowMultiple: boolean;
+}>();
 
 export interface StoryProgressEvent extends CustomEvent {
   detail: {
@@ -42,7 +46,7 @@ const options: UploadOptions<{}> = {
         });
       }
     );
-    
+
     window.addEventListener(
       "story:onDone",
       () => {
@@ -66,7 +70,7 @@ const options: UploadOptions<{}> = {
   onUploadError: () => {},
   onSuccess: () => {},
   restrictions: {
-    allowMultiple: true,
+    allowMultiple: props.allowMultiple,
     allowedFileTypes: [
       {
         description: "Images",
@@ -148,69 +152,3 @@ const options: UploadOptions<{}> = {
   </UploadRoot>
 </template>
 
-<style>
-.dropzone__empty-state {
-  color: #888;
-}
-
-.dropzone {
-  border: dashed 2px #ddd;
-  padding: 20px;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-
-  &[data-dropping] {
-    border-color: blue;
-  }
-}
-
-.item__preview > img {
-  height: 100%;
-}
-
-.item__preview {
-  height: 320px;
-}
-
-.files__item {
-  border: solid 1px #ddd;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.dropzone__files {
-  display: flex;
-  gap: 12px;
-}
-
-.item__footer {
-  display: flex;
-  gap: 8px;
-  max-width: 296px;
-  border-top: solid 1px #ddd;
-  padding: 6px 12px;
-}
-
-.footer__details {
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  flex-grow: 1;
-  min-width: 0;
-}
-
-span.item__name {
-  text-overflow: ellipsis;
-  overflow: hidden;
-  width: 100%;
-  text-align: start;
-}
-
-span.item__size {
-  color: #999;
-  font-size: 12px;
-}
-</style>

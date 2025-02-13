@@ -26,7 +26,7 @@ const options: UploadOptions<{}> = {
   onSuccess: () => {},
   createUploadHandler: createDummyUploadHandler,
   restrictions: {
-    allowMultiple: true,
+    allowMultiple: false,
     allowedFileTypes: [
       {
         description: "Images",

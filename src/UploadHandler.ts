@@ -1,4 +1,3 @@
-import type { ReadonlyRefOrGetter } from "@vueuse/core";
 
 export type UploadHandler = {
   onUpload: (files: File[]) => void;

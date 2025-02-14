@@ -19,7 +19,7 @@ export type UploadFileStatus =
 | { status: "success" }
 | { status: "idle" }
 
-export type UploadFile<TMetadata extends UploadMetadata, TStatus extends UploadFileStatus = UploadFileStatus> =  {
+export type UploadFile<TMetadata extends UploadMetadata = any, TStatus extends UploadFileStatus = UploadFileStatus> =  {
   id: string;
   metadata: TMetadata;
   file: File;

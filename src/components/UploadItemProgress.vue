@@ -18,13 +18,17 @@ const progress = computed(() => {
   if (file.status.status === "pending") {
     return file.status.uploaded / file.file.size;
   }
+
+  if (file.status.status === "success") {
+    return 1;
+  }
   
-  return null;
+  return 0;
 });
 </script>
 
 <template>
-  <Primitive v-if="progress !== null" v-bind="props">
+  <Primitive v-bind="props" :data-pending="file.status.status === 'pending' || undefined">
     <slot :progress="progress">
       {{ progress.toLocaleString(undefined, { style: "percent" }) }}
     </slot>

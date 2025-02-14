@@ -19,7 +19,7 @@ provide(uploadFileKey, props.item);
 </script>
 
 <template>
-  <Primitive v-bind="props">
+  <Primitive v-bind="props" :data-status="item.status.status">
     <slot :status="item.status.status" />
   </Primitive>
 </template>

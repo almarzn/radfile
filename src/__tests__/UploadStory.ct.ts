@@ -4,24 +4,33 @@ import {
   type MountResult,
 } from "@playwright/experimental-ct-vue";
 import path from "node:path";
+import type { UploadFile } from "../components";
 import UploadStory from "../UploadStory.vue";
 import { UploadPage } from "./UploadPage";
 
 test.describe("Upload Component", () => {
   let model: UploadPage;
   let component: MountResult<typeof UploadStory>;
+  let lastModelValue: UploadFile<any>[] | null = null;
 
   test.describe("multiple files", () => {
     test.beforeEach(async ({ mount, page }) => {
+      lastModelValue = null;
       component = await mount(UploadStory, {
         props: {
           allowMultiple: true,
         },
+        on: {
+          'update:modelValue': (value: UploadFile<any>[]) => {
+            lastModelValue = value;
+          }
+        }
       });
 
       await page.evaluate(() => {
         delete window.showOpenFilePicker;
       });
+
       model = new UploadPage(component);
     });
 
@@ -34,6 +43,8 @@ test.describe("Upload Component", () => {
 
       // Verify empty state is shown initially
       await expect(model.isEmptyStateVisible()).resolves.toBe(true);
+
+      expect(lastModelValue).toBe(null);
     });
 
     test("handles file upload through button click", async () => {
@@ -65,6 +76,14 @@ test.describe("Upload Component", () => {
 
       await test.step("Verify empty state is hidden", async () => {
         await expect(model.isEmptyStateVisible()).resolves.toBe(false);
+      });
+
+      await test.step("Verify model value is updated", async () => {
+        expect(lastModelValue).toHaveLength(2);
+        expect(lastModelValue).toEqual([
+          expect.objectContaining({ id: expect.any(String), status: { status: 'idle' } }),
+          expect.objectContaining({ id: expect.any(String), status: { status: 'idle' } }),
+        ]);
       });
     });
 
@@ -137,6 +156,14 @@ test.describe("Upload Component", () => {
         await model.notifyDone();
         const progressDone = await model.getFileProgress(fileId);
         await expect(progressDone).not.toBeVisible();
+      });
+
+      await test.step("Model value is updated", async () => {
+        expect(lastModelValue).toHaveLength(1);
+
+        expect(lastModelValue).toEqual([
+          expect.objectContaining({ id: expect.any(String), status: { status: 'success' } })
+        ])
       });
     });
 

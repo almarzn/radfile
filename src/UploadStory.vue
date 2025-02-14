@@ -13,8 +13,13 @@ import {
   UploadItemSize,
   UploadRoot,
   UploadStartUploadButton,
+  type UploadFile,
 } from "./components";
 import type { UploadOptions } from "./UploadOptions";
+
+const emit = defineEmits<{
+  'update:modelValue': [ReadonlyArray<UploadFile<any>>];
+}>();
 
 const props = defineProps<{
   allowMultiple: boolean;
@@ -61,6 +66,9 @@ const options: UploadOptions<{}> = {
         filesToUpload.push(...files);
       },
       onCleanup: () => {},
+      onRemove: (file) => {
+        filesToUpload.splice(filesToUpload.indexOf(file), 1);
+      }
     };
   },
   getMetadata: () => ({}),
@@ -90,7 +98,7 @@ const options: UploadOptions<{}> = {
 </script>
 
 <template>
-  <UploadRoot :options="options" data-testid="upload-root">
+  <UploadRoot :options="options" data-testid="upload-root" @update:modelValue="console.log($event); emit('update:modelValue', $event)">
     <UploadDropZone class="dropzone" data-testid="upload-dropzone">
       <UploadEmptyState
         class="dropzone__empty-state"

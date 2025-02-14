@@ -1,7 +1,7 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="MetadataT extends UploadMetadata">
 import { Primitive, type PrimitiveProps } from "radix-vue";
-import { computed, provide, reactive, readonly } from "vue";
-import type { UploadOptions } from "../UploadOptions.ts";
+import { computed, onUnmounted, provide, reactive, readonly, type UnwrapRef } from "vue";
+import type { UploadMetadata, UploadOptions } from "../UploadOptions.ts";
 import {
   type UploadFile,
   uploadOptionsKey,
@@ -12,7 +12,8 @@ const props = withDefaults(
   defineProps<
     PrimitiveProps & {
       class?: string;
-      options: UploadOptions<any>;
+      options: UploadOptions<MetadataT>;
+      modelValue?: UploadFile<MetadataT>[];
     }
   >(),
   {
@@ -20,6 +21,10 @@ const props = withDefaults(
     class: "",
   }
 );
+
+const emit = defineEmits<{
+  "update:modelValue": [value: ReadonlyArray<UploadFile<MetadataT>>];
+}>();
 
 const bindProps = computed(() => {
   const { options: _, ...boundProps } = props;
@@ -29,7 +34,14 @@ const bindProps = computed(() => {
 
 provide(uploadOptionsKey, props.options);
 
-const files = reactive<UploadFile[]>([]);
+const files = reactive<UploadFile<MetadataT>[]>([]);
+
+const emitUpdatedModelValue = () => {
+  emit(
+    "update:modelValue",
+    files.map((f) =>f as UploadFile<MetadataT>)
+  );
+};
 
 const handler = props.options.createUploadHandler({
   onProgress: (file, progress) => {
@@ -41,16 +53,22 @@ const handler = props.options.createUploadHandler({
       throw new Error(`File ${file.name} is not pending`);
 
     item.status = { status: "pending", uploaded: progress };
+
+    emitUpdatedModelValue();
   },
   onDone: (file) => {
     const item = files.find((f) => f.file === file)!;
 
     item.status = { status: "success" };
+
+    emitUpdatedModelValue();
   },
   onError: (file, error) => {
     const item = files.find((f) => f.file === file)!;
 
     item.status = { status: "error", error };
+
+    emitUpdatedModelValue();
   },
 });
 
@@ -62,26 +80,32 @@ const addFile = (append: File | File[]) => {
   if (append.length === 0) return;
 
   if (props.options.restrictions.allowMultiple) {
-    return files.push(
-      ...append.map((file) => ({
-        file,
-        id: Math.random().toString(36).slice(2),
-        metadata: props.options.getMetadata(),
-        status: { status: "idle" as const },
-      }))
-    );
+    const filesToAdd = append.map((file) => ({
+      file,
+      id: Math.random().toString(36).slice(2),
+      metadata: props.options.getMetadata() as UnwrapRef<MetadataT>,
+      status: { status: "idle" as const },
+    }));
+
+    files.push(...filesToAdd);
+
+    emitUpdatedModelValue();
+
+    return;
   }
 
   if (files.length > 1) {
     throw new Error("Maximum number of files exceeded");
   }
 
-  return files.splice(0, 1, {
+  files.splice(0, 1, {
     file: append[0],
     id: Math.random().toString(36).slice(2),
-    metadata: props.options.getMetadata(),
+    metadata: props.options.getMetadata() as UnwrapRef<MetadataT>,
     status: { status: "idle" as const },
-  })
+  });
+
+  emitUpdatedModelValue();
 };
 
 const hasIdle = computed(() =>
@@ -100,6 +124,8 @@ provide(uploadStateKey, {
   isUploading,
   removeFile(file) {
     files.splice(files.indexOf(file), 1);
+
+    emitUpdatedModelValue();
   },
   upload: () => {
     const idleFiles = files.filter((file) => file.status.status === "idle");
@@ -107,9 +133,15 @@ provide(uploadStateKey, {
     idleFiles.forEach((file) => {
       file.status = { status: "pending", uploaded: 0 };
     });
-    
+
     handler.onUpload(idleFiles.map((f) => f.file));
+
+    emitUpdatedModelValue();
   },
+});
+
+onUnmounted(() => {
+  handler.onCleanup();
 });
 </script>
 

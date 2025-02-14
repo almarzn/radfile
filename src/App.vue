@@ -14,7 +14,7 @@ import {
   UploadEmptyState,
 } from "./components";
 import UploadStartUploadButton from "./components/UploadStartUploadButton.vue";
-import { createDummyUploadHandler } from "./UploadHandler";
+import { createDummyUploadHandler } from "./createDummyUploadHandler";
 import type { UploadOptions } from "./UploadOptions";
 
 const options: UploadOptions<{}> = {
@@ -69,7 +69,7 @@ const options: UploadOptions<{}> = {
           v-slot="{ status }"
           :key="file.id"
           :item="file"
-          class="flex items-center w-68 flex-col bg-gray-100 dark:bg-gray-800 rounded-md overflow-hidden border border-gray-200 dark:border-gray-700"
+          class="group flex items-center w-68 flex-col bg-gray-100 dark:bg-gray-800 rounded-md overflow-hidden border border-gray-200 dark:border-gray-700"
         >
           <UploadItemPreview
             v-slot="{ preview }"
@@ -77,29 +77,29 @@ const options: UploadOptions<{}> = {
           >
             <UploadItemProgress
               v-slot="{ progress }"
-              class="absolute top-0 w-full bg-gray-300 dark:bg-gray-700 h-1 overflow-hidden z-100"
+              class="group-data-[status=idle]:hidden block absolute top-0 w-full bg-gray-300/60 dark:bg-gray-700/60 backdrop-blur-sm h-1 overflow-hidden z-100 transition-discrete transition-all duration-200 origin-top shadow-md starting:opacity-50 opacity-100 starting:scale-y-0 scale-y-100"
             >
               <div
-                class="bg-blue-500 h-full transition-all duration-200"
-                :style="`width: ${progress * 100}%;`"
+                class="bg-blue-500 h-full transition-all duration-200 group-data-[status=error]:bg-red-500 group-data-[status=success]:bg-green-700"
+                :style="`width: ${(progress) * 100}%;`"
               ></div>
             </UploadItemProgress>
             <div
               v-if="preview.type === 'image'"
-              class="bg-cover bg-center overflow-hidden  border-b border-gray-200 dark:border-gray-700"
+              class="bg-cover bg-center overflow-hidden border-b border-gray-200 dark:border-gray-700 gradient-mask-b-10"
               :style="`background-image: url(${preview.url})`"
             >
               <div class="flex justify-center size-full backdrop-blur-xl">
                 <img
                   :src="preview.url"
                   :alt="preview.alt"
-                  class="max-h-40 max-w-full shadow-md"
+                  class="max-h-40 max-w-full"
                 />
               </div>
             </div>
 
             <div
-              class="flex flex-col p-2 bg-gray-100 dark:bg-gray-800 w-full whitespace-nowrap"
+              class="flex flex-col p-2 pt-0 bg-gray-100 dark:bg-gray-800 w-full whitespace-nowrap"
             >
               <UploadItemName
                 class="text-ellipsis w-full overflow-hidden text-sm"
@@ -141,70 +141,3 @@ const options: UploadOptions<{}> = {
     </UploadDropZone>
   </UploadRoot>
 </template>
-
-<style>
-.dropzone__empty-state {
-  color: #888;
-}
-
-.dropzone {
-  border: dashed 2px #ddd;
-  padding: 20px;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-
-  &[data-dropping] {
-    border-color: blue;
-  }
-}
-
-.item__preview > img {
-  height: 100%;
-}
-
-.item__preview {
-  height: 320px;
-}
-
-.files__item {
-  border: solid 1px #ddd;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.dropzone__files {
-  display: flex;
-  gap: 12px;
-}
-
-.item__footer {
-  display: flex;
-  gap: 8px;
-  max-width: 296px;
-  border-top: solid 1px #ddd;
-  padding: 6px 12px;
-}
-
-.footer__details {
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  flex-grow: 1;
-  min-width: 0;
-}
-
-span.item__name {
-  text-overflow: ellipsis;
-  overflow: hidden;
-  width: 100%;
-  text-align: start;
-}
-
-span.item__size {
-  color: #999;
-  font-size: 12px;
-}
-</style>

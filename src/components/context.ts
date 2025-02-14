@@ -19,32 +19,32 @@ export type UploadFileStatus =
 | { status: "success" }
 | { status: "idle" }
 
-export type UploadFile<TStatus extends UploadFileStatus = UploadFileStatus> =  {
+export type UploadFile<TMetadata extends UploadMetadata, TStatus extends UploadFileStatus = UploadFileStatus> =  {
   id: string;
-  metadata: UploadMetadata;
+  metadata: TMetadata;
   file: File;
   status: TStatus;
 };
 
-export type UploadState = {
-  files: ReadonlyArray<UploadFile>;
+export type UploadState<TMetadata extends UploadMetadata> = {
+  files: ReadonlyArray<UploadFile<TMetadata>>;
 
   isUploading: Readonly<Ref<boolean>>;
   hasIdle: Readonly<Ref<boolean>>;
   hasFiles: Readonly<Ref<boolean>>;
 
   addFile: (file: File | File[]) => void;
-  removeFile: (file: UploadFile) => void;
+  removeFile: (file: UploadFile<TMetadata>) => void;
   upload: () => void;
 };
 
-export const uploadStateKey = Symbol() as InjectionKey<UploadState>;
+export const uploadStateKey = Symbol() as InjectionKey<UploadState<any>>;
 
 export const useUploadState = () => {
   return inject(uploadStateKey)!;
 };
 
-export const uploadFileKey = Symbol() as InjectionKey<UploadFile>;
+export const uploadFileKey = Symbol() as InjectionKey<UploadFile<any>>;
 
 export const useUploadFile = () => {
   return inject(uploadFileKey)!;

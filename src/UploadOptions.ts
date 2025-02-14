@@ -1,7 +1,6 @@
 import type { CreateUploadHandler } from "./UploadHandler";
 
-export type UploadMetadata = {
-}
+export type UploadMetadata = object
 
 export type FileType = {
   description: string;

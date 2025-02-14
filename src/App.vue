@@ -18,6 +18,7 @@ import { createDummyUploadHandler } from "./createDummyUploadHandler";
 import type { UploadOptions } from "./UploadOptions";
 
 const options: UploadOptions<{}> = {
+  autoUpload: true,
   getMetadata: () => ({}),
   onPickError: (e) => {
     console.error("Error selecting file:", e);
@@ -80,7 +81,7 @@ const options: UploadOptions<{}> = {
               class="group-data-[status=idle]:hidden block absolute top-0 w-full bg-gray-300/60 dark:bg-gray-700/60 backdrop-blur-sm h-1 overflow-hidden z-100 transition-discrete transition-all duration-200 origin-top shadow-md starting:opacity-50 opacity-100 starting:scale-y-0 scale-y-100"
             >
               <div
-                class="bg-blue-500 h-full transition-all duration-200 group-data-[status=error]:bg-red-500 group-data-[status=success]:bg-green-700"
+                class="bg-blue-500 h-full transition-all duration-200 group-data-[status=error]:bg-red-500 group-data-[status=success]:bg-green-600 group-data-[status=success]:dark:bg-green-700"
                 :style="`width: ${(progress) * 100}%;`"
               ></div>
             </UploadItemProgress>

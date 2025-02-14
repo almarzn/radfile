@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Primitive, type PrimitiveProps } from "radix-vue";
-import { inject, computed, ref, onMounted, onBeforeUnmount } from "vue";
-import { uploadFileKey, type UploadFile } from "./context";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { useUploadFile } from "./context";
 
 type ImagePreview = {
   type: "image";
@@ -25,12 +25,12 @@ const props = withDefaults(defineProps<Props>(), {
   class: "",
 });
 
-const file = inject(uploadFileKey) as UploadFile;
+const file = useUploadFile();
 const previewUrl = ref<string | null>(null);
 
 onMounted(() => {
-  if (file.file.type.startsWith("image/")) {
-    previewUrl.value = URL.createObjectURL(file.file);
+  if (file.value.file.type.startsWith("image/")) {
+    previewUrl.value = URL.createObjectURL(file.value.file);
   }
 });
 
@@ -41,16 +41,16 @@ onBeforeUnmount(() => {
 });
 
 const preview = computed<Preview>(() => {
-  if (file.file.type.startsWith("image/") && previewUrl.value) {
+  if (file.value.file.type.startsWith("image/") && previewUrl.value) {
     return {
       type: "image",
       url: previewUrl.value,
-      alt: file.file.name
+      alt: file.value.file.name
     };
   }
   return {
     type: "generic",
-    fileType: file.file.type.split("/")[0]
+    fileType: file.value.file.type.split("/")[0]
   };
 });
 </script>

@@ -1,4 +1,4 @@
-import type { DeepReadonly, InjectionKey, Ref } from "vue";
+import type { InjectionKey, Ref } from "vue";
 import { inject } from "vue";
 import type { UploadMetadata, UploadOptions } from "../UploadOptions.ts";
 
@@ -27,7 +27,7 @@ export type UploadFile<TMetadata extends UploadMetadata = any, TStatus extends U
 };
 
 export type UploadState<TMetadata extends UploadMetadata> = {
-  files: DeepReadonly<Ref<UploadFile<TMetadata>[]>>;
+  files: Readonly<Ref<UploadFile<TMetadata>[]>>;
 
   isUploading: Readonly<Ref<boolean>>;
   hasIdle: Readonly<Ref<boolean>>;
@@ -44,7 +44,7 @@ export const useUploadState = () => {
   return inject(uploadStateKey)!;
 };
 
-export const uploadFileKey = Symbol() as InjectionKey<UploadFile<any>>;
+export const uploadFileKey = Symbol() as InjectionKey<Ref<UploadFile<any>>>;
 
 export const useUploadFile = () => {
   return inject(uploadFileKey)!;

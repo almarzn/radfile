@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Primitive, type PrimitiveProps } from "radix-vue";
-import { inject } from 'vue';
-import { uploadFileKey, type UploadFile, uploadStateKey, type UploadState } from "./context";
+import { useUploadFile, useUploadState } from "./context";
 
 interface Props extends PrimitiveProps {
   class?: string;
@@ -15,11 +14,11 @@ const props = withDefaults(
   }
 );
 
-const file = inject(uploadFileKey) as UploadFile;
-const state = inject(uploadStateKey) as UploadState;
+const file = useUploadFile();
+const state = useUploadState();
 
 function remove() {
-  state.removeFile(file);
+  state.removeFile(file.value);
 }
 </script>
 

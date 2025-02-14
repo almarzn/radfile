@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Primitive, type PrimitiveProps } from "radix-vue";
-import { inject } from 'vue';
-import { uploadFileKey, type UploadFile } from "./context";
+import { useUploadFile } from "./context";
+import { computed } from "vue";
 
 const props = withDefaults(
   defineProps<PrimitiveProps>(),
@@ -11,7 +11,7 @@ const props = withDefaults(
   }
 );
 
-const file = inject(uploadFileKey) as UploadFile;
+const file = useUploadFile();
 
 function formatFileSize(bytes: number): string {
   const units = ['B', 'KB', 'MB', 'GB', 'TB'];
@@ -26,8 +26,8 @@ function formatFileSize(bytes: number): string {
   return `${size.toFixed(1)} ${units[unitIndex]}`;
 }
 
-const formattedSize = formatFileSize(file.file.size);
-const bytes = file.file.size;
+const formattedSize = formatFileSize(file.value.file.size);
+const bytes = computed(() => file.value.file.size)
 </script>
 
 <template>

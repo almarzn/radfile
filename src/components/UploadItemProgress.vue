@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Primitive, type PrimitiveProps } from "radix-vue";
-import { inject, computed } from "vue";
-import { uploadFileKey, type UploadFile } from "./context";
+import { computed } from "vue";
+import { useUploadFile } from "./context";
 
 interface Props extends PrimitiveProps {
   class?: string;
@@ -12,14 +12,14 @@ const props = withDefaults(defineProps<Props>(), {
   class: "",
 });
 
-const file = inject(uploadFileKey) as UploadFile;
+const file = useUploadFile();
 
 const progress = computed(() => {
-  if (file.status.status === "pending") {
-    return file.status.uploaded / file.file.size;
+  if (file.value.status.status === "pending") {
+    return file.value.status.uploaded / file.value.file.size;
   }
 
-  if (file.status.status === "success") {
+  if (file.value.status.status === "success") {
     return 1;
   }
   

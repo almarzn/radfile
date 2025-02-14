@@ -1,6 +1,6 @@
-import { onUnmounted, type Ref } from 'vue';
-import type { UploadFile, UploadFileStatus } from '../components/context';
-import type { UploadMetadata, UploadOptions } from '../UploadOptions';
+import { onUnmounted, watch, type Ref } from "vue";
+import type { UploadFile, UploadFileStatus } from "../components/context";
+import type { UploadMetadata, UploadOptions } from "../UploadOptions";
 
 export function useUploadHandler<MetadataT extends UploadMetadata>(
   options: UploadOptions<MetadataT>,
@@ -31,13 +31,24 @@ export function useUploadHandler<MetadataT extends UploadMetadata>(
   });
 
   const upload = () => {
-    const idleFiles = files.value.filter((file) => file.status.status === "idle");
+    const idleFiles = files.value.filter(
+      (file) => file.status.status === "idle"
+    );
+
+    if (idleFiles.length === 0) {
+      return;
+    }
+    
     idleFiles.forEach((file) => {
       file.status = { status: "pending", uploaded: 0 };
     });
     handler.onUpload(idleFiles.map((f) => f.file));
     emitUpdatedModelValue();
   };
+
+  watch(files, () => {
+    if (options.autoUpload) upload();
+  });
 
   onUnmounted(() => {
     handler.onCleanup();

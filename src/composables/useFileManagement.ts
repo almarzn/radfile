@@ -1,4 +1,4 @@
-import { type DeepReadonly, type Ref, type UnwrapRef, readonly, ref, shallowReadonly } from 'vue';
+import { type Ref, type UnwrapRef, ref, shallowReadonly } from 'vue';
 import type { UploadFile, UploadFileStatus } from '../components/context';
 import type { UploadMetadata, UploadOptions } from '../UploadOptions';
 
@@ -52,7 +52,7 @@ export function useFileManagement<MetadataT extends UploadMetadata>(
   };
 
   const setStatus = (file: UploadFile<MetadataT>, status: UploadFileStatus) => {
-    files.value.map(f => f === file ? { ...f, status } : f)
+    files.value = files.value.map(f => f === file ? { ...f, status } : f)
 
     emitUpdatedModelValue();
   }

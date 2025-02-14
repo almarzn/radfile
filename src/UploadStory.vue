@@ -40,6 +40,7 @@ declare global {
 }
 
 const options: UploadOptions<{}> = {
+  autoUpload: true,
   createUploadHandler: (callbacks) => {
     const filesToUpload: File[] = [];
 

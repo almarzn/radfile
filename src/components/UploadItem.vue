@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Primitive, type PrimitiveProps } from "radix-vue";
-import { provide } from "vue";
+import { provide, toRefs } from "vue";
 import { type UploadFile, uploadFileKey } from "./context.ts";
 
 const props = withDefaults(
@@ -15,7 +15,7 @@ const props = withDefaults(
   }
 );
 
-provide(uploadFileKey, props.item);
+provide(uploadFileKey, toRefs(props).item);
 </script>
 
 <template>

@@ -155,7 +155,7 @@ test.describe("Upload Component", () => {
       await test.step("Complete upload", async () => {
         await model.notifyDone();
         const progressDone = await model.getFileProgress(fileId);
-        await expect(progressDone).not.toBeVisible();
+        expect(progressDone).toHaveText("100%");
       });
 
       await test.step("Model value is updated", async () => {
@@ -205,7 +205,9 @@ test.describe("Upload Component", () => {
       model = new UploadPage(component);
     });
 
-    test("Prevent dragging multiple files", async () => {
+    test("Prevent dragging multiple files", async ({ browserName }) => {
+      test.skip(browserName === 'webkit', 'Safari does not support this feature. Dragenter event does have the files property');
+
       const testFiles = await test.step("Create test file paths", async () => {
         return [
           path.join(import.meta.dirname, "../../test-files/test-image.jpg"),

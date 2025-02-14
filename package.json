@@ -9,9 +9,6 @@
     "preview": "vite preview",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
-    "test:ct": "playwright test -c playwright-ct.config.ts",
-    "test:ct:debug": "playwright test -c playwright-ct.config.ts --debug",
-    "test:ct:ui": "playwright test -c playwright-ct.config.ts --ui",
     "test-ct": "playwright test -c playwright-ct.config.ts"
   },
   "dependencies": {

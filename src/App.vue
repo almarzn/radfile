@@ -52,7 +52,7 @@ const options: UploadOptions<{}> = {
     class="h-screen flex items-center justify-center text-gray-500 dark:text-gray-400"
   >
     <UploadDropZone
-      class="border-2 border-gray-200 dark:border-gray-800 rounded-lg px-6 py-5 cursor-pointer flex items-center flex-col gap-4"
+      class="border-2 border-gray-200 dark:border-gray-800 rounded-lg px-6 py-5 cursor-pointer flex items-center flex-col gap-4 data-[dropping]:border-blue-500 data-[dropping]:dark:border-blue-500"
     >
       <UploadEmptyState class="">
         Drop a file or click here to select a file

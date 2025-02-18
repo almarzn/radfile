@@ -1,12 +1,27 @@
 {
   "name": "radfile",
-  "private": true,
+  "license": "MIT",
+  "keywords": [
+    "file",
+    "upload",
+    "vue",
+    "radix-vue"
+  ],
+  "website": "https://github.com/almarzn/radfile",
+  "repository": "https://github.com/almarzn/radfile.git",
+  "bugs": "https://github.com/almarzn/radfile/issues",
   "version": "0.0.0",
   "type": "module",
+  "files": [
+    "dist"
+  ],
+  "types": "dist/radfile.d.ts",
+  "main": "dist/radfile.js",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "test": "npm run test:unit -- run && npm run test-ct",
     "test:unit": "vitest",
     "test:unit:coverage": "vitest run --coverage",

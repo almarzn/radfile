@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Primitive, type PrimitiveProps } from "radix-vue";
 import { inject, computed } from "vue";
-import { uploadStateKey, type UploadFile, type UploadFileProgressStatus, type UploadState } from "./context";
+import { uploadStateKey, type UploadFile, type UploadFileProgressStatus, type UploadState } from "../context";
 
 interface Props extends PrimitiveProps {
   class?: string;
@@ -12,12 +12,12 @@ const props = withDefaults(defineProps<Props>(), {
   class: "",
 });
 
-const state = inject(uploadStateKey) as UploadState;
+const state = inject(uploadStateKey) as UploadState<any>;
 
 const progress = computed(() => {
-  const files = state.files;
+  const files = state.files.value;
 
-  const pendingFiles = files.filter((file): file is UploadFile<UploadFileProgressStatus> => file.status.status === "pending");
+  const pendingFiles = files.filter((file): file is UploadFile<any, UploadFileProgressStatus> => file.status.status === "pending");
   if (pendingFiles.length === 0) return null;
 
   const totalSent = pendingFiles.reduce((sum, file) => {
@@ -31,18 +31,18 @@ const progress = computed(() => {
   return totalSent / totalSize;
 });
 
-const totalFiles = computed(() => state.files.length);
+const totalFiles = computed(() => state.files.value.length);
 
 const pendingCount = computed(() => 
-  state.files.filter(file => file.status.status === "pending").length
+  state.files.value.filter(file => file.status.status === "pending").length
 );
 
 const successCount = computed(() => 
-  state.files.filter(file => file.status.status === "success").length
+  state.files.value.filter(file => file.status.status === "success").length
 );
 
 const errorCount = computed(() => 
-  state.files.filter(file => file.status.status === "error").length
+  state.files.value.filter(file => file.status.status === "error").length
 );
 </script>
 

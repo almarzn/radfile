@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Primitive, type PrimitiveProps } from "radix-vue";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-import { useUploadFile } from "./context";
+import { injectUploadFile } from "../context";
 
 type ImagePreview = {
   type: "image";
@@ -25,7 +25,7 @@ const props = withDefaults(defineProps<Props>(), {
   class: "",
 });
 
-const file = useUploadFile();
+const file = injectUploadFile();
 const previewUrl = ref<string | null>(null);
 
 onMounted(() => {

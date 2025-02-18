@@ -1,4 +1,4 @@
-import { type CreateUploadHandler } from "./UploadHandler";
+import { type CreateUploadHandler } from "./lib";
 
 export const createDummyUploadHandler: CreateUploadHandler = (callbacks) => {
   const cancelled = {

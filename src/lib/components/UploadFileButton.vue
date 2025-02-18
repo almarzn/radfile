@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Primitive, type PrimitiveProps } from "radix-vue";
-import { inject, ref, computed } from "vue";
-import { uploadStateKey, type UploadState, useUploadOptions } from "./context";
+import { computed, ref } from "vue";
+import { injectState, injectUploadOptions } from "../context";
 
 type Props = PrimitiveProps;
 
@@ -10,8 +10,8 @@ const props = withDefaults(defineProps<Props>(), {
   class: "",
 });
 
-const state = inject(uploadStateKey) as UploadState;
-const options = useUploadOptions();
+const state = injectState();
+const options = injectUploadOptions();
 const fileInput = ref<HTMLInputElement>();
 
 const acceptString = computed(() => {
@@ -64,9 +64,9 @@ function handleInputChange(event: Event) {
 </script>
 
 <template>
-  <Primitive v-bind="props" @click="handleClick">
+  <Primitive v-bind="props" @click="handleClick"> 
     <slot>
-      {{ options.restrictions.allowMultiple ? state.files.length > 0 ? 'Add more files' : 'Select files' : 'Select file' }}
+      {{ options.restrictions.allowMultiple ? state.files.value.length > 0 ? 'Add more files' : 'Select files' : 'Select file' }}
     </slot>
     
     <input

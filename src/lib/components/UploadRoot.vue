@@ -1,11 +1,11 @@
 <script setup lang="ts" generic="MetadataT extends UploadMetadata">
 import { Primitive, type PrimitiveProps } from "radix-vue";
 import { computed, provide } from "vue";
-import { useFileManagement } from "../composables/useFileManagement";
-import { useUploadHandler } from "../composables/useUploadHandler";
-import { useUploadState } from "../composables/useUploadState";
+import { useFileManagement } from "../composables/index.ts";
+import { useUploadHandler } from "../composables/useUploadHandler.ts";
+import { useUploadState } from "../composables/useUploadState.ts";
 import type { UploadMetadata, UploadOptions } from "../UploadOptions.ts";
-import { type UploadFile, uploadOptionsKey, uploadStateKey } from "./context.ts";
+import { type UploadFile, uploadOptionsKey, uploadStateKey } from "../context.ts";
 
 const props = withDefaults(
   defineProps<

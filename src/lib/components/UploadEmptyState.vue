@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Primitive, type PrimitiveProps } from "radix-vue";
-import { useUploadState } from './context'
+import { injectState } from '../context'
 
 const props = withDefaults(
   defineProps<
@@ -14,15 +14,14 @@ const props = withDefaults(
   },
 );
 
-const { files } = useUploadState()
+const { files } = injectState()
 </script>
 
 <template>
   <Primitive
-    v-if="files.length > 0"
+    v-if="files.length === 0"
     v-bind="props"
   >
-    <slot :files="files" />
+    <slot />
   </Primitive>
 </template>
-

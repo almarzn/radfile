@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Primitive, type PrimitiveProps } from "radix-vue";
-import { useUploadFile } from "./context";
+import { injectUploadFile } from "../context";
 
 const props = withDefaults(
   defineProps<PrimitiveProps & { class?: string }>(),
@@ -10,7 +10,7 @@ const props = withDefaults(
   }
 );
 
-const file = useUploadFile();
+const file = injectUploadFile();
 </script>
 
 <template>

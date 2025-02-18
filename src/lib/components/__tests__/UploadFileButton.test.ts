@@ -1,8 +1,9 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen } from '@testing-library/vue'
 import userEvent from '@testing-library/user-event'
+import { render, screen } from '@testing-library/vue'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { ref } from 'vue'
+import { uploadOptionsKey, uploadStateKey, type UploadState } from '../../context'
 import UploadFileButton from '../UploadFileButton.vue'
-import { uploadOptionsKey, uploadStateKey, type UploadState } from '../context'
 
 describe('UploadFileButton', () => {
   const originalShowOpenFilePicker = window.showOpenFilePicker
@@ -29,8 +30,8 @@ describe('UploadFileButton', () => {
     onPickError: vi.fn(),
   }
 
-  const mockState: UploadState = {
-    files: [],
+  const mockState: Partial<UploadState<object>> = {
+    files: ref([]),
     addFile: vi.fn(),
     removeFile: vi.fn(),
   }
@@ -67,7 +68,7 @@ describe('UploadFileButton', () => {
       },
       {
         ...mockState,
-        files: [{ id: '1', file: new File([''], 'test.pdf'), status: { status: 'idle' as const }, metadata: {} }],
+        files: ref([{ id: '1', file: new File([''], 'test.pdf'), status: { status: 'idle' as const }, metadata: {} }]),
       }
     )
     expect(screen.getByText('Add more files')).toBeInTheDocument()

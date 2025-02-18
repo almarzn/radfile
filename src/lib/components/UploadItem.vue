@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Primitive, type PrimitiveProps } from "radix-vue";
 import { provide, toRefs } from "vue";
-import { type UploadFile, uploadFileKey } from "./context.ts";
+import { type UploadFile, uploadFileKey } from "../context.ts";
 
 const props = withDefaults(
   defineProps<

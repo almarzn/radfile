@@ -1,4 +1,4 @@
-export * from './context'
+export * from '../context'
 
 export { default as UploadDropZone } from './UploadDropZone.vue'
 export { default as UploadFileButton } from './UploadFileButton.vue'

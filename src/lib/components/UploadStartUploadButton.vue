@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Primitive, type PrimitiveProps } from "radix-vue";
 import { computed } from "vue";
-import { useUploadState } from "./context";
+import { injectState } from "../context";
 
 const props = withDefaults(
   defineProps<
@@ -15,7 +15,7 @@ const props = withDefaults(
   }
 );
 
-const uploadState = useUploadState();
+const uploadState = injectState();
 
 const bindProps = computed(() => {
   return {

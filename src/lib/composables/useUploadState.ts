@@ -1,5 +1,5 @@
 import { computed, type Ref } from 'vue';
-import type { UploadFile } from '../components/context';
+import type { UploadFile } from '../context';
 import type { UploadMetadata } from '../UploadOptions';
 
 export function useUploadState<MetadataT extends UploadMetadata>(

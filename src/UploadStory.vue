@@ -14,8 +14,8 @@ import {
   UploadRoot,
   UploadStartUploadButton,
   type UploadFile,
-} from "./components";
-import type { UploadOptions } from "./UploadOptions";
+  type UploadOptions
+} from "./lib";
 
 const emit = defineEmits<{
   'update:modelValue': [ReadonlyArray<UploadFile<any>>];
@@ -23,6 +23,7 @@ const emit = defineEmits<{
 
 const props = defineProps<{
   allowMultiple: boolean;
+  autoUpload: boolean;
 }>();
 
 export interface StoryProgressEvent extends CustomEvent {
@@ -40,7 +41,7 @@ declare global {
 }
 
 const options: UploadOptions<{}> = {
-  autoUpload: true,
+  autoUpload: props.autoUpload,
   createUploadHandler: (callbacks) => {
     const filesToUpload: File[] = [];
 

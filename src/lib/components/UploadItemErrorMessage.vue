@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Primitive, type PrimitiveProps } from "radix-vue";
 import { computed } from "vue";
-import { useUploadFile } from "./context";
+import { injectUploadFile } from "../context";
 
 interface Props extends PrimitiveProps {
   class?: string;
@@ -12,7 +12,7 @@ const props = withDefaults(defineProps<Props>(), {
   class: "",
 });
 
-const file = useUploadFile();
+const file = injectUploadFile();
 
 const error = computed(() => {
   if (file.value.status.status === "error") {

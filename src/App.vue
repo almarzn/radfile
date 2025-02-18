@@ -12,10 +12,10 @@ import {
   UploadItemName,
   UploadItemSize,
   UploadEmptyState,
-} from "./components";
-import UploadStartUploadButton from "./components/UploadStartUploadButton.vue";
+  UploadStartUploadButton
+} from "./lib";
 import { createDummyUploadHandler } from "./createDummyUploadHandler";
-import type { UploadOptions } from "./UploadOptions";
+import type { UploadOptions } from "./lib/UploadOptions";
 
 const options: UploadOptions<{}> = {
   autoUpload: true,

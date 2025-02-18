@@ -1,10 +1,10 @@
 import type { InjectionKey, Ref } from "vue";
 import { inject } from "vue";
-import type { UploadMetadata, UploadOptions } from "../UploadOptions.ts";
+import type { UploadMetadata, UploadOptions } from "./UploadOptions.ts";
 
 export const uploadOptionsKey = Symbol() as InjectionKey<UploadOptions<any>>;
 
-export const useUploadOptions = () => {
+export const injectUploadOptions = () => {
   return inject(uploadOptionsKey)!;
 };
 
@@ -40,12 +40,12 @@ export type UploadState<TMetadata extends UploadMetadata> = {
 
 export const uploadStateKey = Symbol() as InjectionKey<UploadState<any>>;
 
-export const useUploadState = () => {
+export const injectState = () => {
   return inject(uploadStateKey)!;
 };
 
 export const uploadFileKey = Symbol() as InjectionKey<Ref<UploadFile<any>>>;
 
-export const useUploadFile = () => {
+export const injectUploadFile = () => {
   return inject(uploadFileKey)!;
 };

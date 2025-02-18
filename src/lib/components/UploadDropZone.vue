@@ -2,7 +2,7 @@
 import { Primitive, type PrimitiveProps } from "radix-vue";
 import { useTemplateRef } from "vue";
 import { useDropZone } from "@vueuse/core";
-import { useUploadOptions, useUploadState } from "./context.ts";
+import { injectUploadOptions, injectState } from "../context.ts";
 
 const props = withDefaults(
   defineProps<
@@ -15,8 +15,8 @@ const props = withDefaults(
     class: "",
   },
 );
-const options = useUploadOptions();
-const upload = useUploadState();
+const options = injectUploadOptions();
+const upload = injectState();
 
 const zone = useTemplateRef<HTMLElement>("zone");
 

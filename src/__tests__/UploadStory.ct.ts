@@ -4,7 +4,7 @@ import {
   type MountResult,
 } from "@playwright/experimental-ct-vue";
 import path from "node:path";
-import type { UploadFile } from "../components";
+import type { UploadFile } from "../lib/components";
 import UploadStory from "../UploadStory.vue";
 import { UploadPage } from "./UploadPage";
 
@@ -19,6 +19,7 @@ test.describe("Upload Component", () => {
       component = await mount(UploadStory, {
         props: {
           allowMultiple: true,
+          autoUpload: false,
         },
         on: {
           'update:modelValue': (value: UploadFile<any>[]) => {
@@ -35,13 +36,10 @@ test.describe("Upload Component", () => {
     });
 
     test("renders upload component with all elements", async () => {
-      // Verify main components are visible
       await expect(model.root).toBeVisible();
       await expect(model.dropZone).toBeVisible();
       await expect(model.emptyState).toBeVisible();
       await expect(model.fileButton).toBeVisible();
-
-      // Verify empty state is shown initially
       await expect(model.isEmptyStateVisible()).resolves.toBe(true);
 
       expect(lastModelValue).toBe(null);
@@ -155,7 +153,7 @@ test.describe("Upload Component", () => {
       await test.step("Complete upload", async () => {
         await model.notifyDone();
         const progressDone = await model.getFileProgress(fileId);
-        expect(progressDone).toHaveText("100%");
+        await expect(progressDone).toHaveText("100%");
       });
 
       await test.step("Model value is updated", async () => {
@@ -196,6 +194,7 @@ test.describe("Upload Component", () => {
       component = await mount(UploadStory, {
         props: {
           allowMultiple: false,
+          autoUpload: false,
         },
       });
 
@@ -257,5 +256,49 @@ test.describe("Upload Component", () => {
         await expect(model.getFileName(fileId)).toHaveText("test-document.pdf");
       });
     });
+  });
+
+  test.describe("autoUpload", () => {
+    test.beforeEach(async ({ mount, page }) => {
+      component = await mount(UploadStory, {
+        props: {
+          allowMultiple: false,
+          autoUpload: true,
+        },
+        on: {
+          'update:modelValue': (value: UploadFile<any>[]) => {
+            lastModelValue = value;
+          }
+        }
+      });
+
+      await page.evaluate(() => {
+        delete window.showOpenFilePicker;
+      });
+      model = new UploadPage(component);
+    });
+
+    test("Uploads a file when autoUpload is true", async () => {
+      await test.step("Upload file", async () => {
+        const testFile = path.join(
+          import.meta.dirname,
+          "../../test-files/test-image.jpg"
+        );
+        await model.uploadFilesByButton([testFile]);
+      });
+
+      await test.step("Verify file is uploaded", async () => {
+        const fileIds = await model.getUploadedFileIds();
+
+        expect(fileIds).toHaveLength(1);
+
+        await expect(model.startUploadButton).toBeDisabled();
+
+        expect(lastModelValue).toEqual([
+          expect.objectContaining({ id: expect.any(String), status: { status: 'pending', uploaded: 0 } }),
+        ]);
+      });
+
+    }); 
   });
 });

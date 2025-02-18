@@ -1,5 +1,5 @@
 import { type Ref, type UnwrapRef, ref, shallowReadonly } from 'vue';
-import type { UploadFile, UploadFileStatus } from '../components/context';
+import type { UploadFile, UploadFileStatus } from '../context';
 import type { UploadMetadata, UploadOptions } from '../UploadOptions';
 
 export function useFileManagement<MetadataT extends UploadMetadata>(

@@ -8,7 +8,7 @@ export const createDummyUploadHandler: CreateUploadHandler<any> = (callbacks) =>
 
   return {
     onUpload: (files) => {
-      files.forEach(({file}) => {
+      files.forEach(({ file }) => {
         tickProgress(0, {
           onProgress: (value) => {
             if (value >= file.size) {

@@ -1,4 +1,4 @@
-import { type Ref, type UnwrapRef, ref, shallowReadonly } from 'vue';
+import { type Ref, type UnwrapRef, ref } from 'vue';
 import type { UploadFile, UploadFileStatus } from '../context';
 import type { UploadMetadata, UploadOptions } from '../UploadOptions';
 
@@ -26,7 +26,7 @@ export function useFileManagement<MetadataT extends UploadMetadata>(
         metadata: options.getMetadata(file) as UnwrapRef<MetadataT>,
         status: { status: "idle" as const },
       }));
-      
+
       files.value = [...files.value, ...filesToAdd];
 
       emitUpdatedModelValue();
@@ -61,7 +61,7 @@ export function useFileManagement<MetadataT extends UploadMetadata>(
   }
 
   return {
-    files: shallowReadonly(files) as Readonly<Ref<UploadFile<MetadataT>[]>>,
+    files: files as Readonly<Ref<UploadFile<MetadataT>[]>>,
     addFile,
     removeFile,
     setStatus,

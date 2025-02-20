@@ -22,11 +22,16 @@ export function useUploadHandler<MetadataT extends UploadMetadata>(
       const item = files.value.find((f) => f.file === file)!;
       setStatus(item, { status: "success" });
       emitUpdatedModelValue();
+
+      options.onSuccess?.(item.metadata);
     },
     onError: (file, error) => {
       const item = files.value.find((f) => f.file === file)!;
+
       setStatus(item, { status: "error", error });
+
       emitUpdatedModelValue();
+      options.onUploadError?.(error);
     },
   });
 

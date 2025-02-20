@@ -8,9 +8,9 @@ export type FileType = {
 };
 
 export interface UploadOptions<MetadataT extends UploadMetadata> {
-  readonly createUploadHandler: CreateUploadHandler;
+  readonly createUploadHandler: CreateUploadHandler<MetadataT>;
   readonly autoUpload: boolean;
-  readonly getMetadata: () => MetadataT;
+  readonly getMetadata: (file: File) => MetadataT;
   readonly onPickError?: (err: unknown) => void;
   readonly onUploadError?: (err: unknown) => void;
   readonly onSuccess?: (upload: MetadataT) => void;

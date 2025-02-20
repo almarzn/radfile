@@ -1,6 +1,6 @@
 import { type CreateUploadHandler } from "./lib";
 
-export const createDummyUploadHandler: CreateUploadHandler = (callbacks) => {
+export const createDummyUploadHandler: CreateUploadHandler<any> = (callbacks) => {
   const cancelled = {
     value: false,
   };
@@ -8,7 +8,7 @@ export const createDummyUploadHandler: CreateUploadHandler = (callbacks) => {
 
   return {
     onUpload: (files) => {
-      files.forEach((file) => {
+      files.forEach(({file}) => {
         tickProgress(0, {
           onProgress: (value) => {
             if (value >= file.size) {

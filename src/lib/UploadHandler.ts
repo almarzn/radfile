@@ -1,6 +1,8 @@
+import type { UploadFile } from "./context";
+import type { UploadMetadata } from "./UploadOptions";
 
-export type UploadHandler = {
-  onUpload: (files: File[]) => void;
+export type UploadHandler<MetadataT extends UploadMetadata> = {
+  onUpload: (files: UploadFile<MetadataT>[]) => void;
   onCleanup: () => void;
   onRemove: (file: File) => void;
 };
@@ -11,4 +13,4 @@ export type UploadCallbacks = {
   onDone: (file: File) => void;
 };
 
-export type CreateUploadHandler = (callbacks: UploadCallbacks) => UploadHandler;
+export type CreateUploadHandler<MetadataT extends UploadMetadata> = (callbacks: UploadCallbacks) => UploadHandler<MetadataT>;

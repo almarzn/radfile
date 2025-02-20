@@ -64,8 +64,8 @@ const options: UploadOptions<{}> = {
     );
 
     return {
-      onUpload: (files: File[]) => {
-        filesToUpload.push(...files);
+      onUpload: (files) => {
+        filesToUpload.push(...files.map(el => el.file));
       },
       onCleanup: () => {},
       onRemove: (file) => {

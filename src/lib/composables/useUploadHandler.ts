@@ -42,7 +42,7 @@ export function useUploadHandler<MetadataT extends UploadMetadata>(
     idleFiles.forEach((file) => {
       file.status = { status: "pending", uploaded: 0 };
     });
-    handler.onUpload(idleFiles.map((f) => f.file));
+    handler.onUpload(idleFiles);
     emitUpdatedModelValue();
   };
 

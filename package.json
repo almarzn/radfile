@@ -10,7 +10,7 @@
   "website": "https://github.com/almarzn/radfile",
   "repository": "https://github.com/almarzn/radfile.git",
   "bugs": "https://github.com/almarzn/radfile/issues",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "files": [
     "dist"

@@ -23,11 +23,14 @@ export function useFileManagement<MetadataT extends UploadMetadata>(
       const filesToAdd = append.map((file) => ({
         file,
         id: Math.random().toString(36).slice(2),
-        metadata: options.getMetadata() as UnwrapRef<MetadataT>,
+        metadata: options.getMetadata(file) as UnwrapRef<MetadataT>,
         status: { status: "idle" as const },
       }));
+      
       files.value = [...files.value, ...filesToAdd];
+
       emitUpdatedModelValue();
+
       return;
     }
 
@@ -38,7 +41,7 @@ export function useFileManagement<MetadataT extends UploadMetadata>(
     files.value = [{
       file: append[0],
       id: Math.random().toString(36).slice(2),
-      metadata: options.getMetadata() as UnwrapRef<MetadataT>,
+      metadata: options.getMetadata(append[0]) as UnwrapRef<MetadataT>,
       status: { status: "idle" as const },
     }]
 
